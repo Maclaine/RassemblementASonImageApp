@@ -78,7 +78,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       shouldAutoPlayRef.current = false; // restore silently, let user press play
       setCurrentBookId(saved.bookId);
       setCurrentIndex(index);
-      player.replace({ uri: getStreamUrl(items[index].filename) });
+      player.replace({ uri: getStreamUrl(items[index].bookId, items[index].filename) });
     });
   }, []);
 
@@ -136,7 +136,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     shouldAutoPlayRef.current = true;
     pendingSeekRef.current = 0; // new chapter always starts from beginning
     setCurrentIndex(index);
-    player.replace({ uri: getStreamUrl(allItems[index].filename) });
+    player.replace({ uri: getStreamUrl(allItems[index].bookId, allItems[index].filename) });
   };
 
   // --- Entry point from book screen ---
@@ -149,7 +149,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     setCurrentIndex(index);
     shouldAutoPlayRef.current = true;
     pendingSeekRef.current = 0;
-    player.replace({ uri: getStreamUrl(items[index].filename) });
+    player.replace({ uri: getStreamUrl(items[index].bookId, items[index].filename) });
   };
 
   return (

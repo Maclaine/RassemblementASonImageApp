@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "RevelationsPriveesApp",
-    "slug": "revelationspriveesapp",
+    "name": "Rassemblement À Son Image",
+    "slug": "rassemblementasonimage",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "revelationspriveesapp",
+    "scheme": "rassemblementasonimage",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
@@ -14,7 +14,7 @@
           "audio"
         ]
       },
-      "bundleIdentifier": "com.maclaine.revelationspriveesapp"
+      "bundleIdentifier": "com.maclaine.rassemblementasonimage"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +30,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
-      "package": "com.maclaine.revelationspriveesapp"
+      "package": "com.maclaine.rassemblementasonimage"
     },
     "web": {
       "output": "static",

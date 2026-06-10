@@ -6,8 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors, Fonts } from "../constants/theme";
 import { useMiniPlayerInset } from "../hooks/useMiniPlayerInset";
 
-const logo = require("../../assets/images/brand/logo-revelations-privees.png");
-const mainCardImage = require("../../assets/images/content/revelations-privees.jpg");
+const logo = require("../../assets/images/brand/logo-rassemblement-a-son-image.png");
+const descriptionImage = require("../../assets/images/content/livre-jesus-edition-raimage.png");
 
 export default function WelcomeScreen() {
   const bottomInset = useMiniPlayerInset();
@@ -23,21 +23,24 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.introSection}>
-          <Ionicons name="headset" size={80} color={Colors.secondary} style={styles.introIconBg} />
           <Text style={styles.introText}>
-            Découvrez des <Text style={{ fontFamily: Fonts.serifSemiBold }}>milliers d&apos;heures</Text> d&apos;audiolivres consacrés aux <Text style={{ fontFamily: Fonts.serifSemiBold }}>révélations
-            privées</Text>, aux mystiques chrétiens et à la spiritualité catholique — <Text style={{ fontFamily: Fonts.serifSemiBold }}>librement
-            accessibles</Text>, directement depuis votre appareil.
+            La maison d'édition <Text style={{ fontFamily: Fonts.bold }}>Rassemblement à son image</Text> publie des révélations privées, vies de saints, des témoignages de conversion et des ouvrages d'évangélisation.
           </Text>
         </View>
 
         <View style={styles.mainCard}>
-          <View style={styles.quoteRow}>
-            <Text style={styles.quoteText}>
-              Une <Text style={{ fontFamily: Fonts.boldItalic }}>révélation privée</Text> est une <Text style={{ fontFamily: Fonts.boldItalic }}>expérience spirituelle</Text> intérieure. Les mystiques reçoivent des évocations, des messages, des locutions intérieures du Christ, de la Vierge Marie, de saints, des âmes du purgatoire… {"\n\n"}
-              Ces <Text style={{ fontFamily: Fonts.boldItalic }}>apparitions</Text> ou <Text style={{ fontFamily: Fonts.boldItalic }}>visions</Text> permettent un cœur à cœur avec Jésus Christ, la Vierge Marie. Ces <Text style={{ fontFamily: Fonts.boldItalic }}>révélations privées</Text> nous transmettent un chemin de simplicité pour notre foi, une aide.
+          <View style={styles.descriptionRow}>
+            <Image source={descriptionImage} style={styles.descriptionImage} contentFit="cover" />
+            <Text style={styles.descriptionText}>
+              Nous proposons des <Text style={{ fontFamily: Fonts.bold }}>productions multimédias religieuses</Text> (livres, audio, vidéos, images, feuillets...) via un service de vente par correspondance, par l'intermédiaire du catalogue, des sites internet et du mensuel Chrétiens Magazine.
             </Text>
-            <Image source={mainCardImage} style={styles.mainCardImage} contentFit="cover" />
+          </View>
+
+          <View style={styles.descriptionRow}>
+            <Text style={styles.descriptionText}>
+                Cette application est destinée à vous faire découvrir des <Text style={{ fontFamily: Fonts.bold }}>milliers d&apos;heures</Text> d&apos;audiolivres consacrés à la spiritualité catholique — <Text style={{ fontFamily: Fonts.bold }}>librement accessibles</Text>, directement depuis votre appareil.
+            </Text>
+            <Ionicons name="headset" size={80} color={Colors.secondary} style={styles.descriptionIcon} />
           </View>
 
           <TouchableOpacity style={styles.ctaButton} activeOpacity={0.85} onPress={() => router.push("/library")}>
@@ -56,7 +59,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.primary,
   },
   scroll: {
     flex: 1,
@@ -67,60 +70,48 @@ const styles = StyleSheet.create({
 
   // Hero
   hero: {
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.primary,
     alignItems: "center",
-    paddingTop: 10,
+    paddingTop: 0,
     paddingHorizontal: 24,
   },
   logo: {
     width: "80%",
-    height: 160,
-    marginBottom: 5,
+    height: 130,
   },
 
   // Intro strip (primary background)
   introSection: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.background,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 28,
     paddingTop: 30,
-    paddingBottom: 50,
-    marginTop: -25,
+    marginTop: 0,
     overflow: "hidden",
-  },
-  introIconBg: {
-    position: "absolute",
-    right: 16,
-    bottom: 25,
-    opacity: 1,
   },
   introText: {
     fontSize: 14,
     lineHeight: 20,
-    fontFamily: Fonts.serif,
-    color: Colors.background,
+    fontFamily: Fonts.regular,
+    color: Colors.primary,
     textAlign: "justify",
   },
 
   // Main card (background color, quote + features + CTA)
   mainCard: {
-    flex: 1,
     backgroundColor: Colors.background,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    flex: 1,
+    paddingVertical: 20,
     paddingHorizontal: 28,
-    paddingTop: 32,
-    paddingBottom: 48,
-    marginTop: -25,
   },
-  quoteRow: {
-    flexDirection: "row-reverse",
+  descriptionRow: {
+    flexDirection: "row",
     alignItems: "flex-start",
     gap: 20,
     marginBottom: 32,
   },
-  quoteText: {
+  descriptionText: {
     flex: 1,
     fontSize: 14,
     lineHeight: 20,
@@ -128,7 +119,9 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     textAlign: "left",
   },
-  mainCardImage: {
+  descriptionIcon: {
+  },
+  descriptionImage: {
     width: "45%",
     alignSelf: "stretch",
     borderRadius: 25,

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors, Fonts } from "../../constants/theme";
@@ -22,22 +22,54 @@ export default function BookScreen() {
   const { currentItem, isPlaying, play, pause, openBook } = useAudio();
   const { id } = useLocalSearchParams<{ id: string }>();
   const book = BOOKS.find((b) => b.id === id);
+  const listRef = useRef<SectionList<PlayableItem>>(null);
 
-  const [collapsed, setCollapsed] = useState<Set<number>>(() =>
-    new Set(book?.volumes.map((v) => v.number) ?? [])
-  );
+  const activeVolumeNumber =
+    currentItem?.bookId === id ? currentItem.volumeNumber : null;
+
+  const [collapsed, setCollapsed] = useState<Set<number>>(() => {
+    const all = new Set(book?.volumes.map((v) => v.number) ?? []);
+    const openVolume = activeVolumeNumber ?? book?.volumes[0]?.number;
+    if (openVolume != null) all.delete(openVolume);
+    return all;
+  });
 
   if (!book) return null;
 
   const allItems = getPlayableItems(book);
 
-  const toggleCollapse = (volumeNumber: number) => {
+  const scrollToSection = (sectionIndex: number) => {
+    try {
+      listRef.current?.scrollToLocation({
+        sectionIndex,
+        itemIndex: 0,
+        viewPosition: 0.5,
+        animated: true,
+      });
+    } catch {}
+  };
+
+  const toggleCollapse = (volumeNumber: number, sectionIndex: number) => {
+    const isExpanded = !collapsed.has(volumeNumber);
+
+    if (isExpanded) {
+      // Collapsing: scroll before state update while items are still rendered
+      scrollToSection(sectionIndex);
+    }
+
     setCollapsed((prev) => {
       const next = new Set(prev);
       if (next.has(volumeNumber)) next.delete(volumeNumber);
       else next.add(volumeNumber);
       return next;
     });
+
+    if (!isExpanded) {
+      // Expanding: scroll after items are rendered
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => scrollToSection(sectionIndex))
+      );
+    }
   };
 
   const sections: Section[] = book.volumes.map((vol) => {
@@ -78,6 +110,7 @@ export default function BookScreen() {
       </View>
 
       <SectionList
+        ref={listRef}
         sections={sections}
         keyExtractor={(item) => item.filename}
         contentContainerStyle={[styles.list, { paddingBottom: bottomInset }]}
@@ -97,14 +130,32 @@ export default function BookScreen() {
         renderSectionHeader={({ section }) => {
           const isCollapsed = collapsed.has(section.volumeNumber);
           const hasChapters = section.chapterCount > 0;
+          const isActive =
+            currentItem?.bookId === id &&
+            currentItem?.volumeNumber === section.volumeNumber;
+          const sectionIndex = sections.findIndex(
+            (s) => s.volumeNumber === section.volumeNumber
+          );
           return (
             <TouchableOpacity
-              style={styles.sectionHeader}
-              onPress={() => hasChapters && toggleCollapse(section.volumeNumber)}
+              style={[styles.sectionHeader, isActive && styles.sectionHeaderActive]}
+              onPress={() =>
+                hasChapters && toggleCollapse(section.volumeNumber, sectionIndex)
+              }
               activeOpacity={hasChapters ? 0.7 : 1}
             >
               <View style={styles.sectionTitleRow}>
-                <Text style={styles.sectionTitle}>{section.title}</Text>
+                {isActive && (
+                  <Ionicons
+                    name="musical-notes"
+                    size={13}
+                    color={Colors.secondary}
+                    style={{ marginRight: 6 }}
+                  />
+                )}
+                <Text style={[styles.sectionTitle, isActive && styles.sectionTitleActive]}>
+                  {section.title}
+                </Text>
                 {hasChapters && (
                   <Text style={styles.sectionCount}>{section.chapterCount} sous-chapitres</Text>
                 )}
@@ -115,7 +166,7 @@ export default function BookScreen() {
                 <Ionicons
                   name={isCollapsed ? "chevron-down" : "chevron-up"}
                   size={16}
-                  color={Colors.textMuted}
+                  color={isActive ? Colors.secondary : Colors.textMuted}
                 />
               )}
             </TouchableOpacity>
@@ -194,16 +245,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 28,
     flexGrow: 1,
     paddingBottom: 32,
+    paddingHorizontal: 20
   },
 
   // Cover header
   coverHeader: {
     flexDirection: "row",
     gap: 16,
-    padding: 20,
+    paddingTop: 20,
     paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
     marginBottom: 8,
   },
   cover: {
@@ -234,10 +284,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    marginTop: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.border,
+    backgroundColor: Colors.primary,
+    borderRadius: 10
   },
   sectionTitleRow: {
     flexDirection: "row",
@@ -247,19 +300,25 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: Fonts.semiBold,
     fontSize: 13,
-    color: Colors.primary,
+    color: Colors.background,
     letterSpacing: 0.5,
     textTransform: "uppercase",
+  },
+  sectionHeaderActive: {
+    backgroundColor: Colors.primaryDark,
+  },
+  sectionTitleActive: {
+    color: Colors.secondaryLight,
   },
   sectionCount: {
     fontFamily: Fonts.regular,
     fontSize: 11,
-    color: Colors.textMuted,
+    color: Colors.background,
   },
   comingSoon: {
     fontFamily: Fonts.italic,
     fontSize: 12,
-    color: Colors.textMuted,
+    color: Colors.background,
   },
 
   // Chapter row

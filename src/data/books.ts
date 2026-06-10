@@ -26,7 +26,7 @@ export type Audiobook = {
 
 export const BOOKS: Audiobook[] = [
   {
-    id: "evangile-revele",
+    id: "maria-valtorta-l-evangile-tel-qu-il-m-a-ete-revele",
     title: "L'Évangile tel qu'il m'a été révélé",
     author: "Maria Valtorta",
     description:

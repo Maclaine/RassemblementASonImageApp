@@ -67,10 +67,10 @@ export default function PlayerScreen() {
     if (!currentItem || isDownloading || isDownloaded) return;
     setIsDownloading(true);
     try {
-      const dir = `${FileSystem.documentDirectory}revelations-privees/`;
+      const dir = `${FileSystem.documentDirectory}rassemblement-a-son-image/`;
       await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
       const resumable = FileSystem.createDownloadResumable(
-        getStreamUrl(currentItem.filename),
+        getStreamUrl(currentItem.bookId, currentItem.filename),
         getLocalUri(currentItem.filename),
         {},
         ({ totalBytesWritten, totalBytesExpectedToWrite }) => {

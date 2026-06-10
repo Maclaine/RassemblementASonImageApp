@@ -2,7 +2,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import type { Audiobook } from "../data/books";
 
 export const AUDIO_BASE_URL =
-  "https://cdn.revelationsprivees.fr/public/maria-valtorta-l-evangile-tel-qu-il-m-a-ete-revele";
+  "https://media.asonimage.fr/public";
 
 export type PlayableItem = {
   bookId: string;
@@ -10,15 +10,15 @@ export type PlayableItem = {
   chapterNumber: number;
   subchapterLabel?: string;
   filename: string;
-  displayLabel: string; // e.g. "Tome 8 · Chapitre 1" or "Tome 8 · Chapitre 2A"
+  displayLabel: string;
 };
 
-export function getStreamUrl(filename: string): string {
-  return `${AUDIO_BASE_URL}/${filename}.mp3`;
+export function getStreamUrl(bookId: string, filename: string): string {
+  return `${AUDIO_BASE_URL}/${bookId}/${filename}.mp3`;
 }
 
 export function getLocalUri(filename: string): string {
-  return `${FileSystem.documentDirectory}revelations-privees/${filename}.mp3`;
+  return `${FileSystem.documentDirectory}rassemblement-a-son-image/${filename}.mp3`;
 }
 
 export async function checkIsDownloaded(filename: string): Promise<boolean> {

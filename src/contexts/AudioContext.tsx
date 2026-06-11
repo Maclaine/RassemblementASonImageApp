@@ -60,9 +60,26 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
   // --- Setup ---
   useEffect(() => {
-    setAudioModeAsync({ playsInSilentMode: true });
+    setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: "doNotMix",
+    });
     return () => { player.remove(); };
   }, []);
+
+  // --- Lock screen controls ---
+  useEffect(() => {
+    if (!currentItem || !currentBook) {
+      player.clearLockScreenControls?.();
+      return;
+    }
+    player.setActiveForLockScreen(true, {
+      title: currentItem.displayLabel,
+      artist: currentBook.author,
+      albumTitle: currentBook.title,
+    });
+  }, [currentItem?.filename]);
 
   // --- Restore saved progress on startup ---
   useEffect(() => {

@@ -44,7 +44,7 @@ export default function WelcomeScreen() {
           </View>
 
           <TouchableOpacity style={styles.ctaButton} activeOpacity={0.85} onPress={() => router.push("/library")}>
-            <Text style={styles.ctaText}>Découvrir la bibliothèque</Text>
+            <Text style={styles.ctaText}>Découvrir nos audios</Text>
           </TouchableOpacity>
 
           <Text style={styles.footerText}>
